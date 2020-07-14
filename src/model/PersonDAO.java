@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 /**
  * @author juan_ruiz
  *
@@ -40,9 +42,28 @@ public class PersonDAO {
 				people.add(person);
 			}
 		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error al cargar los registros\n"
+					+ e.getClass().getName() + "\n" + e.getMessage());
 			e.printStackTrace();
 		}
 		return people;
+	}
+	
+	public void createPerson(Person person) {
+		String query = "INSERT INTO registry.people(full_name, phone_number, email) "
+				+ "VALUES(?, ?, ?)";
+		try {
+			ps = con.prepareStatement(query);
+			ps.setString(1, person.getFullName());
+			ps.setString(2, person.getPhoneNumber());
+			ps.setString(3, person.getEmail());
+			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Persona guardada correctamente");
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error al guardar registro\n"
+					+ e.getClass().getName() + "\n" + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 	
 }

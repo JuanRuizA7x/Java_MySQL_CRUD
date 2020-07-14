@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -12,6 +11,7 @@ import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 
 /**
  * @author juan_ruiz
@@ -29,7 +29,6 @@ public class View extends JFrame {
 	public JButton btnEdit;
 	public JButton btnDelete;
 	public JButton btnClear;
-	public DefaultTableModel tableModel;
 	public JTable table;
 
 	/**
@@ -112,11 +111,19 @@ public class View extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 25, 602, 242);
 		panelDetails.add(scrollPane);
-		
-		tableModel = new DefaultTableModel(null, new String[] {
-				"Id", "Nombre completo", "Teléfono", "Email", "Fecha de creación"
-		});
-		table = new JTable(tableModel);
+
+		table = new JTable() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int colum) {
+				return false;
+			}
+		};
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(table);
 	}
 }

@@ -2,8 +2,12 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import model.Person;
@@ -14,7 +18,7 @@ import view.View;
  * @author juan_ruiz
  *
  */
-public class Controller implements ActionListener {
+public class Controller implements ActionListener, MouseListener {
 	
 	private PersonDAO personDAO;
 	private Person person;
@@ -33,35 +37,13 @@ public class Controller implements ActionListener {
 		this.view.btnEdit.addActionListener(this);
 		this.view.btnDelete.addActionListener(this);
 		this.view.btnClear.addActionListener(this);
-		this.people = personDAO.getPeople();
+		this.view.table.addMouseListener(this);
 		this.list();
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		switch (e.getActionCommand()) {
-		case "Guardar": {
-			System.out.println("Se pulsó el botón guardar");
-			break;
-		}
-		case "Editar": {
-			System.out.println("Se pulsó el botón editar");
-			break;
-		}
-		case "Eliminar": {
-			System.out.println("Se pulsó el botón eliminar");
-			break;
-		}
-		case "Limpiar": {
-			System.out.println("Se pulsó el botón limpiar");
-			break;
-		}
-		default:
-			break;
-		}
 	}
 	
 	public void list() {
+		this.people = personDAO.getPeople();
+		
 		Object object[][] = new Object[people.size()][5];
 		
 		for (int i = 0; i < people.size(); i++) {
@@ -77,6 +59,87 @@ public class Controller implements ActionListener {
 		});
 		
 		this.view.table.setModel(tableModel);
+	}
+	
+	public void createPerson() {
+		if(view.txtFullName.getText().length() > 0 && 
+				view.txtPhoneNumber.getText().length() > 0 && 
+				view.txtEmail.getText().length() > 0) {
+			String fullName = view.txtFullName.getText().trim();
+			String phoneNumber = view.txtPhoneNumber.getText().trim();
+			String email = view.txtEmail.getText().trim();
+			this.person = new Person(fullName, phoneNumber, email);
+			this.personDAO.createPerson(person);
+			list();
+			clear();
+		} else {
+			JOptionPane.showMessageDialog(null, "Complete los campos");
+		}
+	}
+	
+	public void clear() {
+		view.txtID.setText("Autogenerado");
+		view.txtFullName.setText("");
+		view.txtPhoneNumber.setText("");
+		view.txtEmail.setText("");
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		switch (e.getActionCommand()) {
+		case "Guardar": {
+			createPerson();
+			break;
+		}
+		case "Editar": {
+			System.out.println("Se pulsó el botón editar");
+			break;
+		}
+		case "Eliminar": {
+			System.out.println("Se pulsó el botón eliminar");
+			break;
+		}
+		case "Limpiar": {
+			clear();
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(e.getClickCount() == 2) {
+			view.txtID.setText(tableModel.getValueAt(view.table.getSelectedRow(), 0).toString());
+			view.txtFullName.setText(tableModel.getValueAt(view.table.getSelectedRow(), 1).toString());
+			view.txtPhoneNumber.setText(tableModel.getValueAt(view.table.getSelectedRow(), 2).toString());
+			view.txtEmail.setText(tableModel.getValueAt(view.table.getSelectedRow(), 3).toString());
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
