@@ -33,6 +33,19 @@ public class Person {
 	 * @param fullName
 	 * @param phoneNumber
 	 * @param email
+	 */
+	public Person(int personId, String fullName, String phoneNumber, String email) {
+		this.personId = personId;
+		this.fullName = fullName;
+		this.phoneNumber = phoneNumber;
+		this.email = email;
+	}
+
+	/**
+	 * @param personId
+	 * @param fullName
+	 * @param phoneNumber
+	 * @param email
 	 * @param createdAt
 	 */
 	public Person(int personId, String fullName, String phoneNumber, String email, Date createdAt) {

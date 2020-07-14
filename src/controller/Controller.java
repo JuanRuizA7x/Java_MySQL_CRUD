@@ -2,7 +2,6 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
@@ -65,16 +64,45 @@ public class Controller implements ActionListener, MouseListener {
 		if(view.txtFullName.getText().length() > 0 && 
 				view.txtPhoneNumber.getText().length() > 0 && 
 				view.txtEmail.getText().length() > 0) {
-			String fullName = view.txtFullName.getText().trim();
-			String phoneNumber = view.txtPhoneNumber.getText().trim();
-			String email = view.txtEmail.getText().trim();
-			this.person = new Person(fullName, phoneNumber, email);
-			this.personDAO.createPerson(person);
-			list();
-			clear();
+			if(view.txtID.getText().equals("Autogenerado")) {
+				String fullName = view.txtFullName.getText().trim();
+				String phoneNumber = view.txtPhoneNumber.getText().trim();
+				String email = view.txtEmail.getText().trim();
+				this.person = new Person(fullName, phoneNumber, email);
+				this.personDAO.createPerson(person);
+				list();
+				clear();
+			} else {
+				JOptionPane.showMessageDialog(null, "Ya existe un registro con ID " + view.txtID.getText());
+			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Complete los campos");
 		}
+	}
+	
+	public void readPerson() {
+		view.txtID.setText(tableModel.getValueAt(view.table.getSelectedRow(), 0).toString());
+		view.txtFullName.setText(tableModel.getValueAt(view.table.getSelectedRow(), 1).toString());
+		view.txtPhoneNumber.setText(tableModel.getValueAt(view.table.getSelectedRow(), 2).toString());
+		view.txtEmail.setText(tableModel.getValueAt(view.table.getSelectedRow(), 3).toString());
+	}
+	
+	public void updatePerson() {
+		int personId = Integer.parseInt(view.txtID.getText().trim());
+		String fullName = view.txtFullName.getText().trim();
+		String phoneNumber = view.txtPhoneNumber.getText().trim();
+		String email = view.txtEmail.getText().trim();
+		this.person = new Person(personId, fullName, phoneNumber, email);
+		this.personDAO.updatePerson(person);
+		list();
+		clear();
+	}
+	
+	public void deletePerson() {
+		int personId = Integer.parseInt(view.txtID.getText().trim());
+		this.personDAO.deletePerson(personId);
+		list();
+		clear();
 	}
 	
 	public void clear() {
@@ -92,11 +120,11 @@ public class Controller implements ActionListener, MouseListener {
 			break;
 		}
 		case "Editar": {
-			System.out.println("Se pulsó el botón editar");
+			updatePerson();
 			break;
 		}
 		case "Eliminar": {
-			System.out.println("Se pulsó el botón eliminar");
+			deletePerson();
 			break;
 		}
 		case "Limpiar": {
@@ -111,35 +139,24 @@ public class Controller implements ActionListener, MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getClickCount() == 2) {
-			view.txtID.setText(tableModel.getValueAt(view.table.getSelectedRow(), 0).toString());
-			view.txtFullName.setText(tableModel.getValueAt(view.table.getSelectedRow(), 1).toString());
-			view.txtPhoneNumber.setText(tableModel.getValueAt(view.table.getSelectedRow(), 2).toString());
-			view.txtEmail.setText(tableModel.getValueAt(view.table.getSelectedRow(), 3).toString());
+			readPerson();
 		}
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mousePressed(MouseEvent e) {		
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mouseReleased(MouseEvent e) {		
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mouseEntered(MouseEvent e) {		
 	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mouseExited(MouseEvent e) {		
 	}
 
 }

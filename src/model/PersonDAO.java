@@ -58,9 +58,40 @@ public class PersonDAO {
 			ps.setString(2, person.getPhoneNumber());
 			ps.setString(3, person.getEmail());
 			ps.executeUpdate();
-			JOptionPane.showMessageDialog(null, "Persona guardada correctamente");
+			JOptionPane.showMessageDialog(null, "Resgistro guardado correctamente");
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Error al guardar registro\n"
+					+ e.getClass().getName() + "\n" + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	public void updatePerson(Person person) {
+		String query = "UPDATE people SET full_name = ?, phone_number = ?, email = ? "
+				+ "WHERE person_id = ?";
+		try {
+			ps = con.prepareStatement(query);
+			ps.setString(1, person.getFullName());
+			ps.setString(2, person.getPhoneNumber());
+			ps.setString(3, person.getEmail());
+			ps.setInt(4, person.getPersonId());
+			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Registro actualizado correctamente");
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error al actualizar registro\n"
+					+ e.getClass().getName() + "\n" + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	public void deletePerson(int id) {
+		String query = "DELETE FROM people WHERE person_id = " + id;
+		try {
+			ps = con.prepareStatement(query);
+			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Registro eliminado correctamente");
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error al eliminar registro\n"
 					+ e.getClass().getName() + "\n" + e.getMessage());
 			e.printStackTrace();
 		}
